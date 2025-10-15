@@ -62,7 +62,8 @@ def purge_cache(request: Request):
         password=config["REDIS_PASSWORD"] or None,
         decode_responses=True,
     )
-    prefix = f"{config['APP_NAME']}_posts:"
+    prefix = f"{config['APP_NAME']}_cache:"
+    print(f"Purging keys with prefix: {prefix}")
     keys = redis_client.keys(f"{prefix}*")
     deleted = 0
     for k in keys:
