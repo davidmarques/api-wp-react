@@ -38,8 +38,11 @@ def purge_cache(request: Request):
     Aceita exclusivamente o header Authorization; não há fallback por query param.
     """
     config = get_config()
+    secret = config.get("SERVER_SECRET")
 
     auth_header = request.headers.get("authorization")
+    print(f"Authorization header: {auth_header}")
+    print(f"Expected secret: {secret}")
     if not auth_header:
         raise HTTPException(status_code=401, detail="Missing Authorization header")
 
@@ -50,7 +53,7 @@ def purge_cache(request: Request):
         )
 
     token = parts[1]
-    if token != config.get("SERVER_SECRET"):
+    if token != secret:
         raise HTTPException(status_code=403, detail="Unauthorized")
 
     redis_client = redis.Redis(
