@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Query, HTTPException
 from app.data_posts import get_posts_by_category
+from app.data_posgraduacao import get_posgraduacao
 from app.conf_base import get_config
 import redis
 
@@ -13,6 +14,12 @@ def read_root():
 def posts_by_cat(cat: str, per_page: int = Query(None, alias="per_page"), page: int = Query(None, alias="page")):
     posts = get_posts_by_category(cat, per_page, page)
     return {"posts": posts}
+
+@app.get("/pos-graduacao")
+def pos_graduacao(per_page: int = Query(None, alias="per_page"), page: int = Query(None, alias="page")):
+    print("Vamos buscar pos-graduacao")
+    items = get_posgraduacao(per_page, page)
+    return {"pos_graduacao": items}
 
 @app.post("/purge_cache")
 def purge_cache(secret: str = Query(..., alias="secret")):
